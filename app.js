@@ -129,6 +129,12 @@ const historyDetailTitle = document.getElementById('history-detail-title');
 function init() {
   generateQRCode();
   setupEventListeners();
+  
+  // Auto-navigate if opened via QR Code
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('action') === 'menu') {
+    navigateTo('menu');
+  }
 }
 
 function navigateTo(viewId) {
@@ -142,8 +148,12 @@ function generateQRCode() {
   if(!qrcodeContainer) return;
   qrcodeContainer.innerHTML = "";
   
-  let appUrl = window.location.href; 
+  // Nettoyer l'URL des anciens paramètres
+  let appUrl = window.location.href.split('?')[0]; 
   if (appUrl.startsWith("file://")) appUrl = "https://sherpa-field.demo/app";
+
+  // Ajouter le paramètre pour ouvrir directement le menu
+  appUrl += "?action=menu";
 
   try {
     new QRCode(qrcodeContainer, {
